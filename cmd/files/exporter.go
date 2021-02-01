@@ -2,6 +2,8 @@ package files
 
 import (
 	"encoding/csv"
+	"encoding/json"
+	"encoding/xml"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io"
 	"log"
@@ -68,4 +70,26 @@ func ExportTransactions(nameOfFile string, sliceOfTransactions []*transaction.Tr
 	}
 
 	return nil
+}
+
+func ExportJson(data []byte) {
+	var decoded []transaction.Transaction
+
+	err := json.Unmarshal(data, &decoded)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Printf("%#v", decoded)
+}
+
+func ExportXml(data []byte) {
+	var decoded []transaction.Transactions
+
+	err := xml.Unmarshal(data, &decoded)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Printf("%#v", decoded)
 }

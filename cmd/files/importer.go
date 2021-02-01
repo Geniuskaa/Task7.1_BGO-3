@@ -3,6 +3,8 @@ package files
 import (
 	"bytes"
 	"encoding/csv"
+	"encoding/json"
+	"encoding/xml"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/card"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io/ioutil"
@@ -45,4 +47,40 @@ func mapRowToTransaction(slice []string) (*transaction.Transaction) {
 		Date:   time.Unix(int64(date), 0),
 		Status: "Completed",
 	}
+}
+
+func ImportJson(transactions []*transaction.Transaction) []byte {
+	encoded, err := json.Marshal(transactions)
+	if err != nil {
+		log.Println(err)
+		return []byte{0}
+	}
+
+	return encoded
+}
+
+func ImportXml(transactions []*transaction.Transaction) []byte {
+	var sliceOfTransactions []transaction.Transaction
+	for _, element := range transactions {
+		sliceOfTransactions = append(sliceOfTransactions, transaction.Transaction{
+			Id:      element.Id,
+			Amount:  element.Amount,
+			MCC:     element.MCC,
+			Date:    element.Date,
+			Status:  element.Status,
+		})
+	}
+
+	changedTransactions := transaction.Transactions{
+		Transactions: sliceOfTransactions,
+	}
+
+	encoded, err := xml.Marshal(changedTransactions)
+	if err != nil {
+		log.Println(err)
+		return []byte{0}
+	}
+	encoded = append([]byte(xml.Header), encoded...)
+	log.Println(string(encoded))
+	return encoded
 }

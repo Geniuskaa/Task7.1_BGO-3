@@ -95,11 +95,18 @@ func main() {
 	m3 := bank.StoreOfCards[0].MonthlySpendingsMutex2(5)
 	card.PrintMapOfMCC(m3)
 
-	files.ExportTransactions("newText2.txt", bank.StoreOfCards[0].Transactions)
+	//files.ExportTransactions("newText2.txt", bank.StoreOfCards[0].Transactions)
 
-	files.Import("newText2.txt", bank.StoreOfCards[0])
+	//files.Import("newText2.txt", bank.StoreOfCards[0])
 
-	fmt.Println(bank.StoreOfCards[0].Transactions[8])
+	//fmt.Println(bank.StoreOfCards[0].Transactions[8])
+
+	//example := files.ImportJson(bank.StoreOfCards[0].Transactions)
+	//files.ExportJson(example)
+
+	example := files.ImportXml(bank.StoreOfCards[0].Transactions)
+	files.ExportXml(example)
+
 
 
 
