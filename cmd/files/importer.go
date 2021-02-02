@@ -3,7 +3,6 @@ package files
 import (
 	"bytes"
 	"encoding/csv"
-	"encoding/json"
 	"encoding/xml"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/card"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
@@ -29,7 +28,6 @@ func Import(fileName string, card *card.Card)  {
 	}
 
 
-
 	for _, string := range records {
 		card.Transactions = append(card.Transactions, mapRowToTransaction(string))
 	}
@@ -49,38 +47,27 @@ func mapRowToTransaction(slice []string) (*transaction.Transaction) {
 	}
 }
 
-func ImportJson(transactions []*transaction.Transaction) []byte {
-	encoded, err := json.Marshal(transactions)
+func ImportXml(fileName string) error {
+	var decoded []string
+
+	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Println(err)
-		return []byte{0}
+		return err
 	}
 
-	return encoded
-}
+	//reader := xml.NewDecoder(bytes.NewReader(data))
+	//err = reader.Decode(decoded)
+	//if err != nil {
+	//	log.Println(err)
+	//	return err
+	//}
 
-func ImportXml(transactions []*transaction.Transaction) []byte {
-	var sliceOfTransactions []transaction.Transaction
-	for _, element := range transactions {
-		sliceOfTransactions = append(sliceOfTransactions, transaction.Transaction{
-			Id:      element.Id,
-			Amount:  element.Amount,
-			MCC:     element.MCC,
-			Date:    element.Date,
-			Status:  element.Status,
-		})
-	}
-
-	changedTransactions := transaction.Transactions{
-		Transactions: sliceOfTransactions,
-	}
-
-	encoded, err := xml.Marshal(changedTransactions)
+	err = xml.Unmarshal(data, &decoded)
 	if err != nil {
 		log.Println(err)
-		return []byte{0}
+		return err
 	}
-	encoded = append([]byte(xml.Header), encoded...)
-	log.Println(string(encoded))
-	return encoded
+	log.Printf("%#v", decoded)
+	return err
 }

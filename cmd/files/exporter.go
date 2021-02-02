@@ -2,7 +2,6 @@ package files
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"encoding/xml"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io"
@@ -72,24 +71,44 @@ func ExportTransactions(nameOfFile string, sliceOfTransactions []*transaction.Tr
 	return nil
 }
 
-func ExportJson(data []byte) {
-	var decoded []transaction.Transaction
-
-	err := json.Unmarshal(data, &decoded)
+func ExportXml(nameOfFile string, transactions []*transaction.Transaction) error {
+	name := nameOfFile + ".xml"
+	file, err := os.Create(name)
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
-	log.Printf("%#v", decoded)
-}
 
-func ExportXml(data []byte) {
-	var decoded []transaction.Transactions
+	defer func(c io.Closer) {
+		if err := c.Close(); err != nil {
+			log.Println(err)
+		}
+	}(file)
 
-	err := xml.Unmarshal(data, &decoded)
+	var sliceOfTransactions []transaction.Transaction
+	for _, element := range transactions {
+		sliceOfTransactions = append(sliceOfTransactions, transaction.Transaction{
+			Id:      element.Id,
+			Amount:  element.Amount,
+			MCC:     element.MCC,
+			Date:    element.Date,
+			Status:  element.Status,
+		})
+	}
+
+	changedTransactions := transaction.Transactions{
+		Transactions: sliceOfTransactions,
+	}
+
+	encoded, err := xml.Marshal(changedTransactions)
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
-	log.Printf("%#v", decoded)
+	encoded = append([]byte(xml.Header), encoded...)
+
+
+	w := xml.NewEncoder(file)
+	w.Encode(string(encoded))
+	return nil
 }
