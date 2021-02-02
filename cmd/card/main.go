@@ -6,7 +6,6 @@ import (
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/card"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transfer"
-	"io"
 	"log"
 	"os"
 	"runtime/trace"
@@ -59,7 +58,7 @@ func main() {
 	transfers.Purchase(73_416, 0, "5050", time.Date(2021,4,14,6,0,0,0, time.Local))
 	transfers.Purchase(713_416, 0, "5090", time.Date(2021,4,14,6,0,0,0, time.Local))
 
-	if err := execute("newText3.txt", bank.StoreOfCards[0].Transactions); err != nil {
+	if err := execute("JsonFile", bank.StoreOfCards[0].Transactions); err != nil {
 		os.Exit(1)
 	}
 
@@ -95,12 +94,9 @@ func main() {
 	m3 := bank.StoreOfCards[0].MonthlySpendingsMutex2(5)
 	card.PrintMapOfMCC(m3)
 
-	files.ExportTransactions("newText2.txt", bank.StoreOfCards[0].Transactions)
 
-	files.Import("newText2.txt", bank.StoreOfCards[0])
-
-	fmt.Println(bank.StoreOfCards[0].Transactions[8])
-
+	files.ExportJson("newJson", bank.StoreOfCards[0].Transactions)
+	files.ImportJson("newJson.json")
 
 
 
@@ -108,21 +104,8 @@ func main() {
 
 
 func execute(filename string, sliceOfTransactions []*transaction.Transaction) (err error) {
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	defer func(c io.Closer) {
-		if cerr := c.Close(); cerr != nil {
-			log.Println(cerr)
-			if err == nil {
-				err = cerr
-			}
-		}
-	}(file)
 
-	err = files.ExportTransactions(filename, sliceOfTransactions)
+	err = files.ExportJson(filename, sliceOfTransactions)
 	if err != nil {
 		log.Println(err)
 		return err

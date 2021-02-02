@@ -2,6 +2,7 @@ package files
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io"
 	"log"
@@ -67,5 +68,31 @@ func ExportTransactions(nameOfFile string, sliceOfTransactions []*transaction.Tr
 		return err
 	}
 
+	return nil
+}
+
+func ExportJson(name string, transactions []*transaction.Transaction) error {
+	fileName := name + ".json"
+
+	file, err := os.Create(fileName)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	defer func(c io.Closer) {
+		if err := c.Close(); err != nil {
+			log.Println(err)
+		}
+	}(file)
+
+	encoded, err := json.Marshal(transactions)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	w := json.NewEncoder(file)
+	w.Encode(string(encoded))
 	return nil
 }

@@ -3,6 +3,7 @@ package files
 import (
 	"bytes"
 	"encoding/csv"
+	"encoding/json"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/card"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io/ioutil"
@@ -27,7 +28,6 @@ func Import(fileName string, card *card.Card)  {
 	}
 
 
-
 	for _, string := range records {
 		card.Transactions = append(card.Transactions, mapRowToTransaction(string))
 	}
@@ -45,4 +45,30 @@ func mapRowToTransaction(slice []string) (*transaction.Transaction) {
 		Date:   time.Unix(int64(date), 0),
 		Status: "Completed",
 	}
+}
+
+func ImportJson(filename string) error {
+	var decoded string
+
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//reader := json.NewDecoder(bytes.NewReader(data))
+	//err = reader.Decode(decoded)
+	//if err != nil {
+	//	log.Println(err)
+	//	return err
+	//}
+
+	err = json.Unmarshal(data, &decoded)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	log.Printf("%#v", decoded)
+	return nil
 }
