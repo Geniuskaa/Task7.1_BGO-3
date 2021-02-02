@@ -26,7 +26,7 @@ func (s *Service) Export(writer io.Writer) error {
 		return nil
 	}
 
-	records := make([][]string, len(s.transactions))
+	records := make([][]string, 0, len(s.transactions))
 	for _, t := range s.transactions {
 		record := []string{
 			strconv.Itoa(int(t.Date.Unix())),
@@ -43,7 +43,8 @@ func (s *Service) Export(writer io.Writer) error {
 }
 
 func ExportTransactions(nameOfFile string, sliceOfTransactions []*transaction.Transaction) error {
-	file, err := os.Create(nameOfFile)
+	name := nameOfFile + ".csv"
+	file, err := os.Create(name)
 	if err != nil {
 		log.Println(err)
 		return err

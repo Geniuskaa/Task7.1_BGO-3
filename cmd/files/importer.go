@@ -12,7 +12,6 @@ import (
 )
 
 func Import(fileName string, card *card.Card)  {
-
 	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Println(err)

@@ -59,7 +59,7 @@ func main() {
 	transfers.Purchase(73_416, 0, "5050", time.Date(2021,4,14,6,0,0,0, time.Local))
 	transfers.Purchase(713_416, 0, "5090", time.Date(2021,4,14,6,0,0,0, time.Local))
 
-	if err := execute("newText3.txt", bank.StoreOfCards[0].Transactions); err != nil {
+	if err := execute("newText2", bank.StoreOfCards[0].Transactions); err != nil {
 		os.Exit(1)
 	}
 
@@ -95,9 +95,9 @@ func main() {
 	m3 := bank.StoreOfCards[0].MonthlySpendingsMutex2(5)
 	card.PrintMapOfMCC(m3)
 
-	files.ExportTransactions("newText2.txt", bank.StoreOfCards[0].Transactions)
+	files.ExportTransactions("newText", bank.StoreOfCards[0].Transactions)
 
-	files.Import("newText2.txt", bank.StoreOfCards[0])
+	files.Import("newText.csv", bank.StoreOfCards[0])
 
 	fmt.Println(bank.StoreOfCards[0].Transactions[8])
 
@@ -108,7 +108,8 @@ func main() {
 
 
 func execute(filename string, sliceOfTransactions []*transaction.Transaction) (err error) {
-	file, err := os.Create(filename)
+	name := filename + ".csv"
+	file, err := os.Create(name)
 	if err != nil {
 		log.Println(err)
 		return err
