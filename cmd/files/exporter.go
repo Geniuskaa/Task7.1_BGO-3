@@ -86,13 +86,10 @@ func ExportJson(name string, transactions []*transaction.Transaction) error {
 		}
 	}(file)
 
-	encoded, err := json.Marshal(transactions)
+	err = json.NewEncoder(file).Encode(transactions)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-
-	w := json.NewEncoder(file)
-	w.Encode(string(encoded))
 	return nil
 }

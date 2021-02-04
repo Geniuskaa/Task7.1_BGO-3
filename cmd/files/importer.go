@@ -8,6 +8,7 @@ import (
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
@@ -48,25 +49,23 @@ func mapRowToTransaction(slice []string) (*transaction.Transaction) {
 }
 
 func ImportJson(filename string) error {
-	var decoded string
 
-	data, err := ioutil.ReadFile(filename)
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	//reader := json.NewDecoder(bytes.NewReader(data))
-	//err = reader.Decode(decoded)
-	//if err != nil {
-	//	log.Println(err)
-	//	return err
-	//}
+	var decoded []transaction.Transaction
 
-	err = json.Unmarshal(data, &decoded)
+	err = json.NewDecoder(file).Decode(&decoded)
 	if err != nil {
 		log.Println(err)
 		return err
+	}
+
+	for _, element := range decoded {
+		log.Println(element)
 	}
 
 	log.Printf("%#v", decoded)
