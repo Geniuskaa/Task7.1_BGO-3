@@ -63,18 +63,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	//for _, sample := range bank.StoreOfCards[0].Transactions {
-	//	fmt.Println(sample)
-	//}
-	//fmt.Println(" ")
-
-	//SortSumOfTransactions(bank.StoreOfCards[0].Transactions)
-
-	//for _, sample := range bank.StoreOfCards[0].Transactions {
-	//	fmt.Println(sample)
-	//}
-
-
 
 	bank.StoreOfCards[0].SumConcurrently(5, time.Date(2021,1,1,0,0,0,0, time.Local), time.Date(2021,5,1,0, 0,0,0, time.Local))
 

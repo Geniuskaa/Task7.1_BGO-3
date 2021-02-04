@@ -25,8 +25,6 @@ func Import(fileName string, card *card.Card)  {
 		return
 	}
 
-
-
 	for _, string := range records {
 		card.Transactions = append(card.Transactions, mapRowToTransaction(string))
 	}
