@@ -71,9 +71,9 @@ func ExportTransactions(nameOfFile string, sliceOfTransactions []*transaction.Tr
 	return nil
 }
 
-func ExportXml(nameOfFile string, transactions []*transaction.Transaction) error {
-	name := nameOfFile + ".xml"
-	file, err := os.Create(name)
+func ExportXml(name string, transactions []*transaction.Transaction) error {
+	nameOfFile := name + ".xml"
+	file, err := os.Create(nameOfFile)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -86,6 +86,7 @@ func ExportXml(nameOfFile string, transactions []*transaction.Transaction) error
 	}(file)
 
 	var sliceOfTransactions []transaction.Transaction
+
 	for _, element := range transactions {
 		sliceOfTransactions = append(sliceOfTransactions, transaction.Transaction{
 			Id:      element.Id,
@@ -105,10 +106,15 @@ func ExportXml(nameOfFile string, transactions []*transaction.Transaction) error
 		log.Println(err)
 		return err
 	}
+
 	encoded = append([]byte(xml.Header), encoded...)
+	log.Println(string(encoded))
 
+	_, err = file.Write(encoded)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
-	w := xml.NewEncoder(file)
-	w.Encode(string(encoded))
 	return nil
 }

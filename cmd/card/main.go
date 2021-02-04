@@ -30,7 +30,6 @@ func main() {
 	defer trace.Stop()
 
 
-
 	bank := card.NewService([]*card.Card{},"Tinkoff")
 	bank.AddCard(1,"VISA", "RUB", 14_800_00, "4724 3728 3929 5030")
 	bank.AddCard(2, "MASTER", "RUB", 28_750_00, "6930 2857 3892 2967")
@@ -62,18 +61,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	//for _, sample := range bank.StoreOfCards[0].Transactions {
-	//	fmt.Println(sample)
-	//}
-	//fmt.Println(" ")
-
-	//SortSumOfTransactions(bank.StoreOfCards[0].Transactions)
-
-	//for _, sample := range bank.StoreOfCards[0].Transactions {
-	//	fmt.Println(sample)
-	//}
-
-
 
 	bank.StoreOfCards[0].SumConcurrently(5, time.Date(2021,1,1,0,0,0,0, time.Local), time.Date(2021,5,1,0, 0,0,0, time.Local))
 
@@ -94,20 +81,9 @@ func main() {
 	m3 := bank.StoreOfCards[0].MonthlySpendingsMutex2(5)
 	card.PrintMapOfMCC(m3)
 
-	//files.ExportTransactions("newText2.txt", bank.StoreOfCards[0].Transactions)
-
-	//files.Import("newText2.txt", bank.StoreOfCards[0])
-
-	//fmt.Println(bank.StoreOfCards[0].Transactions[8])
-
-	//example := files.ImportJson(bank.StoreOfCards[0].Transactions)
-	//files.ExportJson(example)
-
 
 	files.ExportXml("newxml", bank.StoreOfCards[0].Transactions)
 	files.ImportXml("newXml.xml")
-
- // TODO: поменять execute
 
 
 

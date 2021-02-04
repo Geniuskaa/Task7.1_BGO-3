@@ -6,8 +6,10 @@ import (
 	"encoding/xml"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/card"
 	"github.com/Geniuskaa/Task7.1_BGO-3/pkg/transaction"
+	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
@@ -48,26 +50,44 @@ func mapRowToTransaction(slice []string) (*transaction.Transaction) {
 }
 
 func ImportXml(fileName string) error {
-	var decoded []string
-
-	data, err := ioutil.ReadFile(fileName)
+	file, err := os.Open(fileName)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	//reader := xml.NewDecoder(bytes.NewReader(data))
-	//err = reader.Decode(decoded)
-	//if err != nil {
-	//	log.Println(err)
-	//	return err
-	//}
+	content := make([]byte, 0)
+	buf := make([]byte, 4096)
+	for {
+		n, err := file.Read(buf)
+		if err != nil {
+			if err != io.EOF {
+				log.Println(err)
+				return err
+			}
+			content = append(content, buf[:n]...)
+			break
+		}
+		content = append(content, buf[:n]...)
+	}
 
-	err = xml.Unmarshal(data, &decoded)
+	//var decoded []transaction.Transaction
+
+
+	decoded := transaction.Transactions{
+		XMLName:      xml.Header,
+		Transactions: []transaction.Transaction{},
+	}
+
+
+	err = xml.Unmarshal(content, &decoded)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
+
 	log.Printf("%#v", decoded)
-	return err
+
+
+	return nil
 }
